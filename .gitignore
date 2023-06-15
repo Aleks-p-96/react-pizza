@@ -11,7 +11,9 @@
 
 # production
 /build
-/public
+/public/index copy.html
+/public/cart.html
+/public/cart-empty.html
 
 # misc
 .DS_Store

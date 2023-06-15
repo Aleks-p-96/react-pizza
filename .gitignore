@@ -11,7 +11,6 @@
 
 # production
 /build
-/public/index copy.html
 
 # misc
 .DS_Store

@@ -11,7 +11,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { setCategoryId, setCurrentPage, setOrder, setFilters, selectFilter } from "../redux/slices/filterSlice";
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 
-import { SearchContext } from "../App";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -81,7 +80,11 @@ const Home = () => {
     // .filter((obj) =>
     //   obj.title.toLowerCase().includes(searchValue.toLowerCase())
     // )
-    .map((obj) => <Link key={obj.id} to={`/pizza/${obj.id}`}><PizzaBlock {...obj} /></Link>);
+    .map((obj) => (
+      // <Link key={obj.id} to={`/pizza/${obj.id}`}>
+      <PizzaBlock key={obj.id} {...obj} />
+      // </Link>
+    ));
 
   const skeletons = [...new Array(6)].map((_, index) => (
     <Skeleton key={index} />

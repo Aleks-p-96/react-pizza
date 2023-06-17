@@ -1,10 +1,10 @@
 import React from "react";
-import { selectFilter, setSort } from "../redux/slices/filterSlice";
+import { selectSort, setSort } from "../redux/slices/filterSlice";
 import { useSelector, useDispatch  } from "react-redux";
 
 function Sort( { onChangeOrder }) {
   const dispatch = useDispatch();
-  const sort = useSelector(selectFilter);
+  const sort = useSelector(selectSort);
   const sortRef = React.useRef();
 
   const list = [

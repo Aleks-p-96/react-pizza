@@ -1,36 +1,41 @@
 import React from "react";
-import { selectSort, setSort } from "../redux/slices/filterSlice";
+import { selectSort, setSort, changeOrder } from "../redux/slices/filterSlice";
 import { useSelector, useDispatch  } from "react-redux";
 
-function Sort( { onChangeOrder }) {
+function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(selectSort);
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
-  const list = [
+  type SortItem = {
+    name:string;
+    sortProperty: string;
+  }
+
+  const list: SortItem[] = [
     { name: "популярности", sortProperty: "rating" },
     { name: "цене", sortProperty: "price" },
     { name: "алфавиту", sortProperty: "title" },
   ];
   const [open, setOpen] = React.useState(false);
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: SortItem) => {
     dispatch(setSort(obj))
     setOpen(false);
   };
 
   React.useEffect(() => {
-    const handleClickOutside = event => {
-      if(!event.composedPath().includes(sortRef.current)) {
-        setOpen(false)
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
+        setOpen(false);
       }
-    }
-    document.body.addEventListener('click', handleClickOutside);
+    };
+    document.body.addEventListener("click", handleClickOutside);
 
     return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    }
-  }, [])
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
 
   return (
@@ -49,7 +54,7 @@ function Sort( { onChangeOrder }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <b onClick={() => onChangeOrder()} className="arrows">
+        <b onClick={() => dispatch(changeOrder)} className="arrows">
           ⇅{" "}
         </b>
         <span onClick={() => setOpen(!open)}>{sort.name}</span>

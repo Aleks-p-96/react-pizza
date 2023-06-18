@@ -8,9 +8,12 @@ import { useSelector } from "react-redux";
 import { selectCart } from "../redux/slices/cartSlise";
 
 
+
 function Header() {
   const location = useLocation();
   const { totalPrice, items } = useSelector(selectCart);
+
+  const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0);
   return (
     <div className="header">
       <div className="container">
@@ -58,7 +61,7 @@ function Header() {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span>{items.reduce((sum, item) => sum + item.count, 0)}</span>
+              <span>{totalCount}</span>
             </Link>
           )}
         </div>

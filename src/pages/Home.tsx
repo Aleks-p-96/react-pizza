@@ -7,12 +7,12 @@ import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { setCategoryId, setCurrentPage, setOrder, setFilters, selectFilter } from "../redux/slices/filterSlice";
+import { useNavigate } from "react-router-dom";
+import { setCategoryId, setCurrentPage, setFilters, selectFilter } from "../redux/slices/filterSlice";
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
@@ -22,7 +22,7 @@ const Home = () => {
   const { items, status } = useSelector(selectPizzaData);
 
 
-  const onChangePage = (pageNumber) => {
+  const onChangePage = (pageNumber: number) => {
     dispatch(setCurrentPage(pageNumber))
   };
 
@@ -32,7 +32,9 @@ const Home = () => {
     const order = sort.order ? "asc" : "desc";
     const search = searchValue ? `&title=${searchValue}` : "";
 
-    dispatch(fetchPizzas( {
+    dispatch(
+      // @ts-ignore
+      fetchPizzas( {
       category,
       sortBy,
       order,
@@ -53,7 +55,7 @@ const Home = () => {
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [categoryId, sort, searchValue, currentPage])
+  }, [categoryId, sort, searchValue, currentPage, navigate])
 
   // Если был первый рендер, то проверяем URL и созраняем в redux
   React.useEffect(() => {
@@ -62,7 +64,7 @@ const Home = () => {
       dispatch(setFilters(params));
       isSearch.current = true;
     }
-  }, [])
+  }, [dispatch])
 
   // Если был первый рендер, то делаем запрос
   React.useEffect(() => {
@@ -80,7 +82,7 @@ const Home = () => {
     // .filter((obj) =>
     //   obj.title.toLowerCase().includes(searchValue.toLowerCase())
     // )
-    .map((obj) => (
+    .map((obj: any) => (
       // <Link key={obj.id} to={`/pizza/${obj.id}`}>
       <PizzaBlock key={obj.id} {...obj} />
       // </Link>
@@ -95,9 +97,9 @@ const Home = () => {
       <div className="content__top">
         <Categories
           value={categoryId}
-          onChangeCategory={(id) => dispatch(setCategoryId(id))}
+          onChangeCategory={(id:number) => dispatch(setCategoryId(id))}
         />
-        <Sort onChangeOrder={() => dispatch(setOrder())} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (

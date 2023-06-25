@@ -6,15 +6,22 @@ import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCategoryId, setCurrentPage, setFilters, selectFilter } from "../redux/slices/filterSlice";
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
+import { useAppDispatch } from "../redux/store";
 
+export type SearchPizzaParams = {
+  sortProperty: "rating" | "title" | "price";
+  order: "asc" | "desc";
+  categoryId: string;
+  currentPage: string;
+};
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
@@ -29,26 +36,28 @@ const Home: React.FC = () => {
   const getPizzas = async () => {
     const category = categoryId ? `category=${categoryId}` : "";
     const sortBy = sort.sortProperty;
-    const order = sort.order ? "asc" : "desc";
+    const order = sort.order;
     const search = searchValue ? `&title=${searchValue}` : "";
 
     dispatch(
-      // @ts-ignore
-      fetchPizzas( {
-      category,
-      sortBy,
-      order,
-      search,
-      currentPage
-    }))
+      fetchPizzas({
+        category,
+        sortBy,
+        order,
+        search,
+        currentPage: String(currentPage),
+      })
+    );
   }
+
+
 
   // Если изменили параметры и был первый рендер
   React.useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
         sortProperty: sort.sortProperty,
-        order: sort.order ? "asc" : "desc",
+        order: sort.order ,
         categoryId: categoryId,
         currentPage: currentPage
       });
@@ -60,7 +69,7 @@ const Home: React.FC = () => {
   // Если был первый рендер, то проверяем URL и созраняем в redux
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = (qs.parse(window.location.search.substring(1)) as unknown) as SearchPizzaParams;
       dispatch(setFilters(params));
       isSearch.current = true;
     }

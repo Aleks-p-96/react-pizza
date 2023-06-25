@@ -15,8 +15,8 @@ type PizzaBlockProps = {
 
 const PizzaBlock: React.FC<PizzaBlockProps> = ({ title, price, imageUrl, sizes, types, id }) => {
   const dispatch = useDispatch();
-  const [activeType, setActiveType] = React.useState(types[0]);
-  const [activeSize, setActiveSize] = React.useState(sizes[0]);
+  const [activeType, setActiveType] = React.useState<number>(types[0]);
+  const [activeSize, setActiveSize] = React.useState<number>(sizes[0]);
   const typeNames = ["тонкое", "традиционное"];
   // const { items } = useSelector(selectCart);
   // const addedCount = items

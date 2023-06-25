@@ -7,12 +7,9 @@ import Search from "./Search";
 import { useSelector } from "react-redux";
 import { selectCart } from "../redux/slices/cartSlise";
 
-
-
 function Header() {
   const location = useLocation();
   const { totalPrice, items } = useSelector(selectCart);
-
   const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0);
   return (
     <div className="header">

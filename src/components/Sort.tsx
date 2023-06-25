@@ -2,25 +2,26 @@ import React from "react";
 import { selectSort, setSort, changeOrder } from "../redux/slices/filterSlice";
 import { useSelector, useDispatch  } from "react-redux";
 
-function Sort() {
+type SortItem = {
+  name:string;
+  sortProperty: 'rating' | 'title' | 'price';
+}
+
+export const sortlist: SortItem[] = [
+  { name: "популярности", sortProperty: "rating" },
+  { name: "цене", sortProperty: "price" },
+  { name: "алфавиту", sortProperty: "title" },
+];
+
+const Sort: React.FC = () => {
   const dispatch = useDispatch();
-  const sort = useSelector(selectSort);
+  const {name, order} = useSelector(selectSort);
   const sortRef = React.useRef<HTMLDivElement>(null);
-
-  type SortItem = {
-    name:string;
-    sortProperty: string;
-  }
-
-  const list: SortItem[] = [
-    { name: "популярности", sortProperty: "rating" },
-    { name: "цене", sortProperty: "price" },
-    { name: "алфавиту", sortProperty: "title" },
-  ];
   const [open, setOpen] = React.useState(false);
 
   const onClickListItem = (obj: SortItem) => {
-    dispatch(setSort(obj))
+
+    dispatch(setSort({...obj, order}))
     setOpen(false);
   };
 
@@ -36,6 +37,7 @@ function Sort() {
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
 
 
   return (
@@ -54,19 +56,19 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <b onClick={() => dispatch(changeOrder)} className="arrows">
-          ⇅{" "}
+        <b onClick={() => dispatch(changeOrder())} className="arrows">
+          ⇅
         </b>
-        <span onClick={() => setOpen(!open)}>{sort.name}</span>
+        <span onClick={() => setOpen(!open)}>{name}</span>
       </div>
       {open && (
         <div className="sort__popup">
           <ul>
-            {list.map((obj, index) => (
+            {sortlist.map((obj, index) => (
               <li
                 key={index}
                 onClick={() => onClickListItem(obj)}
-                className={sort.name === obj.name ? "active" : ""}
+                className={name === obj.name ? "active" : ""}
               >
                 {obj.name}
               </li>
